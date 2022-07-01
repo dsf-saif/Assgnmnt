@@ -2,6 +2,7 @@ package StepDefntn;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -14,6 +15,7 @@ import junit.framework.Assert;
 public class Preturn 
 {
 	WebDriver d=Hclass.d;
+	String return_id ,order_id, customer,product,model;
 	
 @Given("Admin is navigated to the Product Return page and clicks the + button.")
 public void admin_is_navigated_to_the_Product_Return_page_and_clicks_the_button1() throws InterruptedException 
@@ -210,12 +212,17 @@ public void admin_is_navigated_to_the_Product_Return_page_and_clicks_the_button1
 	@Then("no entry is deleted and no message is deleted.")
 	public void no_entry_is_deleted_and_no_message_is_deleted() throws InterruptedException 
 	{
-		WebElement n=  d.findElement(By.cssSelector("div.alert.alert-success"));
-	    String act1 = n.getText();
-	    System.out.println(act1);
+		WebElement n =null;
+		 try{
+			 n = d.findElement(By.cssSelector("div.alert.alert-success"));
+		 }
+		 catch(NoSuchElementException e){
+			 System.out.println("No entry is deleted & No Message is displayed");
+		 }
+		 
 	    Thread.sleep(2000);
 	    
-	    System.out.println("No entry is deleted & No Message is displayed");
+	    Assert.assertEquals(null, n);
 	    
 	    Thread.sleep(2000);
 	}
@@ -223,8 +230,8 @@ public void admin_is_navigated_to_the_Product_Return_page_and_clicks_the_button1
 	@Given("User is navigated to the products return page")
 	public void user_is_navigated_to_the_products_return_page() throws InterruptedException 
 	{
-		d.get("http://retailm1.upskills.in/admin/");
-		Thread.sleep(1500);
+			d.get("http://retailm1.upskills.in/admin/");
+			Thread.sleep(1500);
 		   d.findElement(By.id("input-username")).sendKeys("admin");
 		   d.findElement(By.id("input-password")).sendKeys("Admin@123");
 		   Thread.sleep(500);
@@ -243,44 +250,6 @@ public void admin_is_navigated_to_the_Product_Return_page_and_clicks_the_button1
 		  // d.findElement(By.cssSelector("a i.fa.fa-plus")).click();
 		   Thread.sleep(1000);
 		 
-	}
-	
-	@Then("valid returnID entry are displayed")
-	public void valid_returnID_entry_are_displayed()
-	{
-		WebElement r1= d.findElement(By.xpath("//table/tbody/tr/td[1]"));
-		System.out.println(r1.getText());
-		
-	    }
-
-	@Then("valid orderID entry are displayed")
-	public void valid_orderID_entry_are_displayed() 
-	{
-		WebElement o1=d.findElement(By.xpath("//table/tbody/tr/td[1]"));
-		System.out.println(o1.getText());
-	}
-
-	@Then("valid customer entry are displayed")
-	public void valid_customer_entry_are_displayed() 
-	{
-		WebElement c1=d.findElement(By.xpath("//table/tbody/tr/td[1]"));
-		System.out.println(c1.getText());
-	}
-
-	@Then("valid product entry are displayed")
-	public void valid_product_entry_are_displayed() 
-	{
-		WebElement p1=d.findElement(By.xpath("//table/tbody/tr/td[1]"));
-		System.out.println(p1.getText());
-		
-	}
-
-	@Then("valid model entry are displayed")
-	public void valid_model_entry_are_displayed() 
-	{
-		WebElement m1= d.findElement(By.xpath("//table/tbody/tr/td[1]"));
-		System.out.println(m1.getText());
-		
 	}
 	
 	@When("User Enters a valid Return ID {string}")
@@ -317,17 +286,76 @@ public void admin_is_navigated_to_the_Product_Return_page_and_clicks_the_button1
 	public void user_Enters_a_valid_Model(String model) throws InterruptedException 
 	{
 		 d.findElement(By.xpath("//input[@name='filter_model']")).sendKeys(model);
-		 Thread.sleep(1500);
+		 Thread.sleep(1100);
 		 
 	}
 	@When("Clicks on the filter button")
 	public void clicks_on_the_filter_button() throws InterruptedException 
 	{
-	d.findElement(By.cssSelector("button i.fa.fa-filter")).click();
-	Thread.sleep(1500);
+	d.findElement(By.cssSelector("button i.fa.fa-filter")).click(); // //button[@id='button-filter']
+	Thread.sleep(1100);
 	
 		
 	}
+	
+	@Then("valid returnID entry are displayed {string}")
+	public void valid_returnID_entry_are_displayed(String return_id) throws InterruptedException
+	{
+		WebElement r1= d.findElement(By.xpath("//table/tbody/tr/td[2]"));
+		System.out.println(r1.getText());
+		
+		Assert.assertEquals(return_id, r1.getText());
+		Thread.sleep(1100);
+		System.out.println("Valid returnID displayed");
+		
+	}
+
+	@Then("valid orderID entry are displayed {string}")
+	public void valid_orderID_entry_are_displayed(String order_id) throws InterruptedException
+	{
+
+		WebElement o1=d.findElement(By.xpath("//table/tbody/tr/td[3]"));
+		System.out.println(o1.getText());
+		Thread.sleep(1100);
+		Assert.assertEquals(order_id, o1.getText());
+		System.out.println("Valid Order ID displayed");
+	}
+
+	@Then("valid customer entry are displayed {string}")
+	public void valid_customer_entry_are_displayed(String customer) throws InterruptedException 
+	{
+		WebElement c1=d.findElement(By.xpath("//table/tbody/tr/td[4]"));
+		System.out.println(c1.getText());
+		Thread.sleep(1100);
+		Assert.assertEquals(customer, c1.getText());
+		System.out.println("Valid Customer displayed");
+	}
+
+	@Then("valid product entry are displayed {string}")
+	public void valid_product_entry_are_displayed(String product) throws InterruptedException 
+	{
+
+		WebElement p1=d.findElement(By.xpath("//table/tbody/tr/td[5]"));
+		System.out.println(p1.getText());
+		Thread.sleep(1200);
+		Assert.assertTrue(p1.getText().contains(product));
+		 
+		 System.out.println("Valid Product displayed");
+		  
+	}
+
+	@Then("valid model entry are displayed {string}")
+	public void valid_model_entry_are_displayed(String model) throws InterruptedException 
+	{
+		WebElement m1= d.findElement(By.xpath("//table/tbody/tr/td[6]"));
+		System.out.println(m1.getText());
+		Thread.sleep(1100);
+		
+		Assert.assertTrue(m1.getText().contains(model));
+		
+		System.out.println("Valid Model displayed");
+	}
+
 	    
 
 
